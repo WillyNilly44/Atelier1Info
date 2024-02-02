@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Atelier 1</title>
+
+</head>
+
+<body>
+
+  <svg id="graph" width="800px" height="550px"></svg>
+</body>
+       
+<script defer>
+  const svgns = "http://www.w3.org/2000/svg";
+  let viewPortMaxUnitX = 1000;
+  let viewPortMaxUnitY = 1200;
+  let viewport = null;
+  let mois = ["Janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+  let ventes = [6500, 5550, 4200, 4525, 2500, 1500, 500, 1000, 1750, 2300, 3700, 3500];
+  let xMonths = -30;
+  let VentesX = -50;
+  let smallLines = 890;
+
+
+  init_UI();
+  function init_UI() {
+    insertViewPort("graph");
+    BaseSkeleton();
+    FaireColonne();
+    viewport.appendChild(text(400, 75, "Ventes 2023", 0, 5, "black"))
+  }
+  function FaireColonne() {
+    let PosiX = -55
+    let NextY = 0
+    for (let i = 0; i < mois.length; i++) {
+      NextY = 890 - (ventes[i] / 10)
+      viewport.appendChild(text(PosiX, NextY - 5, "$ " + ventes[i], 0, 1.5, "black"))
+      viewport.appendChild(rect(PosiX - 5, NextY, 75, ventes[i] / 10, changeColorLines(ventes[i]), "black", 1));
+      PosiX = PosiX + 100;
+    }
+  }
+  function BaseSkeleton() {
+    viewport.appendChild(text(-200, 900, "$ 0", 0, 2, "black"));
+    viewport.appendChild(rect(-100, 890, 1350, 3, "black", "black", 1));
+    let PosY = 790
+    for(let i = 1;i<8;i++)
+    {
+      viewport.appendChild(rect(-100, PosY, 1350, 3, "grey", "grey", 1));
+      viewport.appendChild(text(-200, PosY+10, "$ "+i*1000, 0, 2, "black"));
+      PosY -=100
+    }
+   
+    
+
+    for (let i = 0; i < 70; i++) {
+      viewport.appendChild(rect(-100, smallLines, 1350, 0.1, "grey", "grey", 1))
+      smallLines -= 10;
+    }
+    for (let i = 0; i < mois.length; i++) {
+      viewport.appendChild(text(xMonths, 920, mois[i], 45, 2, "black"));
+      xMonths += 100;
+    }
+  }
+  function insertViewPort(containerId) {
+    viewport = document.createElementNS(svgns, "svg");
+    viewport.setAttribute("id", "viewport");
+    viewport.setAttribute("viewBox", "0 0 " + viewPortMaxUnitX + " " + viewPortMaxUnitY);
+    document.getElementById(containerId).appendChild(viewport);
+  }
+
+
+  function rect(x, y, width, height, fill = "white", stroke = "black", strokeWidth = 1) {
+    let rect = document.createElementNS(svgns, "rect");
+    rect.setAttribute("x", x); rect.setAttribute("y", y);
+    rect.setAttribute("width", width); rect.setAttribute("height", height);
+    rect.setAttribute("fill", fill); rect.setAttribute("stroke", stroke);
+    rect.setAttribute("stroke-width", strokeWidth);
+
+    return rect;
+  }
+
+  function text(x, y, content, angle = 0, size = "1", fill = "black") {
+    let text = document.createElementNS(svgns, "text");
+    text.setAttribute("x", x); text.setAttribute("y", y);
+    text.setAttribute("transform", `rotate(${angle},${x},${y})`);
+    text.setAttribute("font-size", size + "em");
+    text.setAttribute("fill", fill);
+    text.innerHTML = content;
+
+    return text;
+  }
+
+  function changeColorLines(dollars = 0) {
+    let color = "";
+    if (dollars > 4500) {
+      color = "green";
+    }
+    else if (dollars > 3000 && dollars <= 4500) {
+      color = "yellow";
+    }
+    else if (dollars > 1000 && dollars <= 3000) {
+      color = "orange";
+    }
+    else if (dollars <= 1000) {
+      color = "red";
+    }
+    return color;
+  }
+
+</script>
+
+</html>
